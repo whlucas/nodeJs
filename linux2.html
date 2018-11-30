@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>linux2</title>
+</head>
+<body>
+    装环境的时候 prosy:512M      反向代理
+               Service 1G      服务器
+               cache 2G        缓存
+               Database 1G     数据库
+               Release 2G      发布机
+
+    1.用户相关的命令
+
+    创建用户
+    用户必须属于一个用户组
+    useradd panda
+    查看用户
+    cat /etc/passwd
+    panda:x:1000:1000::/home/panda:/bin/bash  用户名:密码(不给你看):用户id(我们自己定义的用户id从1000开始):用户所在组id:备注(为空):用户文件的目录
+
+    给这个用户添加一个密码
+    passwd panda
+    之后输两边密码
+
+    然后就可以再用另外一个用户来登录我这个系统了
+    用户名@IP地址:   panda@10.3.37.176
+    输入密码就登进去了
+
+    用户组
+    为了让不同的用户组干不同的事,就区分了用户组
+
+    查看用户组
+    cat /etc/group
+    这个时候多了一个
+    panda:x:1000:  用户组名:密码:用户组ID
+    也就是我在创建用户的时候系统会自动的依据这个用户名生成一个用户组名
+
+    创建用户组
+    groupadd animals
+
+    我想要创建一个用户cat给他放到这个animals用户组里面去
+    useradd -G animals cat
+    这个时候查看用户组 cat /etc/group
+    发现这个cat在animals用户组下,然后又生成了一个新的用户组cat
+
+    删除组
+    groupdel test
+    如果这个组是一个用户的主要组那么这个组就没法删,就比如cat创建cat用户时所生成的cat组
+
+    删除用户
+    userdel cat
+    删了这个用户之后,animals组里面没有这个用户了,cat组也没了
+
+    怎么看一个用户属于哪一个组
+    直接输groups 打印当前用户属于哪一个组
+    groups panda  打印panda属于哪个组
+    直接打whoami
+
+    我想修改dog的主要组
+    我先创建在animal组里面创建一个dog
+    useradd -G animals dog
+    usermod -g animal dog 把dog的主要组修改成animal
+    这个时候dog的组id就变成了animal的组id,就不再是dog组的id了
+    dog组就可以删掉了
+
+    看用户组的详细信息
+    id + 名字
+    id panda
+
+    用户的切换
+    su + 用户名 su表示switch user
+    su panda
+    然后比如说这个用户用完了
+    输入exit就退出了,回到了root用户
+
+
+    lscpu
+    查看机器的cpu类型
+
+
+    df
+    主要用来看磁盘空间
+    df -h 也是看磁盘空间
+    df -i 磁盘上面索引的空间, 这个满了也不能用了
+    为了在磁盘上面找东西找的快,磁盘上会专门有一块放磁盘内容的索引,这个df -i就是看这个索引的空间
+    有的时候磁盘没满索引满了,说明磁盘的碎文件太多了
+
+
+    ps aux
+    现在系统上面都起了哪些服务
+    比如我想看一下我这个系统里面node是不是活着
+    ps aux |grep "node"
+    如果结果只有一条,就说明没活着
+
+
+    top
+    查看这一台机器的资源的占用情况
+
+    top - 11:38:37 up  8:07,  2 users,  load average: 0.00, 0.01, 0.01
+         系统时间 系统启动了多久 几个用户在登录(这一个,虚拟机上一个)  这三个数字代表一分钟,五分钟,十五分钟cpu的负载情况
+    这三个显示cpu负载情况的数字有什么用
+    我们会有一个机器的负载情况随着具体时间变换的图, 如果说我这个图突然出现了一个很高的峰值,意味着在这个峰值时刻机器可能出事了,可能是机器被攻击,可能是代码出问题
+    通过这个1分 5分 15分能看出一个变化的趋势
+
+    Tasks:  86 total,   2 running,  84 sleeping,   0 stopped,   0 zombie
+    现在系统里面正在执行的线程数 有2个正在执行  84个正在睡觉  没有停止的   没有阻塞的
+
+    %Cpu(s):  0.3 us,    0.0 sy,  0.0 ni, 99.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+    us: 用户空间占用cpu的百分比
+    sy: 系统空间占用cqu的百分比
+    ni: 不管他
+    id: cpu空闲了多少
+    wa: io等待占用了多少cpu
+    hi: 硬中断占用cpu的百分比
+    si: 软中断占用cpu的百分比
+
+    KiB Mem :   499428 total,   287412 free,    85956 used,   126060 buff/cache
+    内存使用情况  一共有多少        空闲了多少        使用了多少
+
+    KiB Swap:   839676 total,   839676 free,        0 used.   373604 avail Mem
+    内存交换:
+    假设有两个程序占了4G内存但是没干活,新来了个程序发现内存不够了,我就把前面那两个程序使用的内存其中三个G交换到硬盘里面去存着,但是不能释放,释放了前面两个程序就挂了,这样就腾出来3G内存给新来的那个程序使用
+
+    PID USER  PR  NI VIRT RES SHR S %CPU        %MEM     TIME+ COMMAND
+                               这个进程用了多少cpu  这个进程用了多少内存
+
+
+    假如我的程序经常超时,先看看机器挂了没有,没挂的话就用上面的方式看看哪里出了问题
+    比如有大量的网络IO使新的请求不能及时的占用到网络的端口,或者是不是有大量的磁盘IO,占用cpu的使用
+    或者看看是不是哪一个进程有问题
+
+    退出  ctrl+c
+
+
+
+    写一个node
+
+
+    创建一个test.js文件
+    vi test.js
+    在这个文件里面写一个console.log("hello, world");
+    :wq保存
+    执行
+    node test.js
+    就输出了hello, world
+
+    这个是在本机输出,我想在web输出
+    在js文件中写下这些东西
+    var http = require("http")
+    function hello (req, res) {
+        res.writeHead(200, {"Content-Type":"text/plain"});
+        res.end("hello, world");
+    }
+    http.createServer(hello).listen(12306, "10.3.37.176");
+    console.log("hello, world"); // 这一行是在本机里面输入,和上面无关
+
+    还需要关闭一下防火墙才能在浏览器里面打印
+    systemctl disable firewalld
+
+
+</body>
+</html>
