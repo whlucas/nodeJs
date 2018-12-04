@@ -2,7 +2,7 @@ let fs = require("fs");
 
 // 加载配置文件
 let globalConf = {};
-let conf = fs.readFileSync("./一个简易的小服务器/server.conf");
+let conf = fs.readFileSync("./server.conf");
 let confs = conf.toString().split("\r\n"); // 转成字符串用换行拆分
 for (let i = 0; i < confs.length; i ++){
     let tempConf = confs[i].split("="); // 用等号把每一行拆成两部分
@@ -20,6 +20,7 @@ if(globalConf.path_position === "relative"){
     globalConf.basePath = globalConf.path // 如果是绝对路径就啥也不干直接付过来
 }
 
+console.log(globalConf.basePath);
 
 // 比如我想要访问的这个文件在桌面上,我只需要改配置文件里面的路径信息,改成绝对路径,然后把桌面的路径输入到里面,然后就可以放问到桌面上的文件了
 
