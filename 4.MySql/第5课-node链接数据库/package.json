@@ -1,0 +1,14 @@
+{
+  "name": "my",
+  "version": "1.0.0",
+  "description": "",
+  "main": "第5课_node链接数据库.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "^2.16.0"
+  }
+}

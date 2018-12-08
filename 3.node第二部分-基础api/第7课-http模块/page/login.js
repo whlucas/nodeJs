@@ -1,6 +1,6 @@
 window.onload = function() {
     xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "/getData", true);
+    xmlHttp.open("GET", "/getData2", true);
     xmlHttp.send(null);
 
     xmlHttp.onreadystatechange = function () {
