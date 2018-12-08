@@ -53,10 +53,29 @@ function queryStudentByClassAndAge(classNum, age){
     connection.end();
 }
 
+// 写一个根据学号查密码的功能
+function queryStudentByStuNum(stuNum, success) {
+    let querySql = "select * from students where stu_num = ?";
+
+    connection.connect();
+
+    connection.query(querySql, stuNum, function(error, result) {
+        if (error == null){
+            console.log(result);
+            success(result); // 成功了就执行我这个方法
+        } else {
+            console.log(error);
+        }
+    });
+
+    connection.end();
+}
+
 // 这个东西的导出,导出给service用
 module.exports = {
     "queryAllStudent": queryAllStudent,
-    "queryStudentByClassAndAge": queryStudentByClassAndAge
+    "queryStudentByClassAndAge": queryStudentByClassAndAge,
+    "queryStudentByStuNum": queryStudentByStuNum
 };
 
 // 基本是web层调用service service调用DAO

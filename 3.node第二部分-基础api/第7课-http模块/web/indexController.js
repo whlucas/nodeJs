@@ -6,6 +6,9 @@ let studentService = require("../service/第5课(3)-studentService")
 
 let path = new Map();
 
+let url = require('url');
+
+
 // 设置一个请求路径为getData所对应处理的函数
 function getData(request, response){ // 这个里面处理路径是getdata的请求
     // 收到请求返回一个hello
@@ -27,7 +30,32 @@ function getData2(request, response){
     })
 }
 
+function login(request, response) {
+
+    // 获取我传过来的url里面的参数
+    let params = url.parse(request.url, true).query; // 加一个true就把参数们变成对象的形式
+
+    studentService.queryStudentByStuNum(params.stuNum, function (result) {
+        let res;
+        if(result == null || result.length === 0){
+            res = "Fail"; // 如果没找到
+        }else{
+            if (result[0].pwd === params.password){ // 返回的是一个数组,返回第一个
+                res = "OK"; // 找到了相等
+            }else{
+                res = "Fail"; // 找到了不相等
+            }
+        }
+
+
+        response.write(res);
+        response.end();
+    })
+}
+
+
 // 我想让这个处理请求的方法和路径对应起来,因为我请求请求的是路径
 path.set("/getData", getData);
 path.set("/getData2", getData2);
+path.set("/login", login);
 module.exports.path = path; // 把我的这个字典导出来

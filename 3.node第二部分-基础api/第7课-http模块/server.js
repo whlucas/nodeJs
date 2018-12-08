@@ -25,6 +25,8 @@ let loader = require("./loader");
 http.createServer(function (request, response) { // 里面穿一个函数,这个函数里面传两个参数
     // 获取url
     let pathName = url.parse(request.url).pathname;
+    // 获取参数
+    // let param = url.parse(request.url, true).query; // 加一个true就把参数们变成对象的形式
     // 判断是静态文件还是动态文件
     let isStatic = idStaticsRequest(pathName);
 

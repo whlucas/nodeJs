@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script >
+      function login() {
+          let stuNum = document.getElementById("stuNum").value;
+          let password = document.getElementById("password").value;
+
+          let params = "stuNum=" + stuNum + "&password=" + password;
+
+          let xmlHttp = new XMLHttpRequest();
+              xmlHttp.open("GET", "/login?" + params, true);
+              xmlHttp.send(null);
+
+              xmlHttp.onreadystatechange = function () {
+                  if (xmlHttp.readyState === 4 && xmlHttp.status === 200){
+                      console.log(xmlHttp.responseText);  // 这里请求成功了打印给我返回的内容(这里因为是由index.http文件调用,所以打印在浏览器上)
+                      console.log(typeof xmlHttp.responseText); // 打印内容的类型
+
+                      if(xmlHttp.responseText === "OK") { // 如果返回值是ok
+                          alert("成功");
+                      }else{
+                          alert("失败");
+                      }
+                  }
+          }
+      }
+  </script>
+</head>
+<body>
+    <input type="text" id="stuNum" placeholder="学号">
+    <input type="password" id="password" placeholder="密码">
+    <input type="submit" value="提交" onclick="login()">
+</body>
+</html>

@@ -6,8 +6,13 @@ function queryAllStudent(success) {
     studentDAO.queryAllStudent(success); // 传一个成功了的回调函数进去
 }
 
+function queryStudentByStuNum(stuNum, success) {
+    studentDAO.queryStudentByStuNum(stuNum, success);
+}
+
 module.exports = {
-    "queryAllStudent": queryAllStudent
+    "queryAllStudent": queryAllStudent,
+    "queryStudentByStuNum": queryStudentByStuNum
 };
 
 // 这样就是service层,掉DAO层,DAO层掉数据库
