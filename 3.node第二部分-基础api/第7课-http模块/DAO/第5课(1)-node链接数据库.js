@@ -10,13 +10,25 @@
 let mysql = require("mysql");
 
 // 链接之前我先要配置一下,要不然他不知道要链接哪一个数据库
-let connection = mysql.createConnection({
-    host: "127.0.0.1",
-    port: "3306",
-    user: "root",
-    password: "7777777",
-    database: "school" // 链接哪一个数据库
-});
+// let connection = mysql.createConnection({
+//     host: "127.0.0.1",
+//     port: "3306",
+//     user: "root",
+//     password: "7777777",
+//     database: "school" // 链接哪一个数据库
+// });
+
+// 我这里把这个创建链接放到函数里面,这样方便我们多次查询的时候创建新的链接
+function createConnection() {
+    let connection = mysql.createConnection({
+        host: "127.0.0.1",
+        port: "3306",
+        user: "root",
+        password: "7777777",
+        database: "school" // 链接哪一个数据库
+    });
+    return connection;
+}
 
 // 我先写一个查
 
@@ -42,4 +54,4 @@ let connection = mysql.createConnection({
 // 所以就可以把我上面的那一段都写在studentDAO的里面
 
 // 导出我这个链接
-module.exports = connection;
+module.exports.createConnection = createConnection;

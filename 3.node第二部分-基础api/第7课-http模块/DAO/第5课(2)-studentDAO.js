@@ -1,6 +1,6 @@
 // 关于查学生有关的操作全都放在这里,这里可以有很过个函数
 
-let connection = require("./第5课(1)-node链接数据库");
+let dbutil = require("./第5课(1)-node链接数据库");
 
 function queryAllStudent(success) { // 传一个成功了的回调函数
     // 我先写一个查
@@ -8,6 +8,8 @@ function queryAllStudent(success) { // 传一个成功了的回调函数
     // 写一条语句
     let querySql = "select * from students";
 
+    // 我们每一次都用我传过来的这个新建一个连接,结束的时候把我创建的这个链接关掉,这样就可以多次链接了
+    let connection = dbutil.createConnection();
     // 查之前的有个连接操作
     connection.connect();
 
@@ -36,6 +38,7 @@ function queryStudentByClassAndAge(classNum, age){
     let querySql = "select * from students where class = ? and age = ?";
     // 我在这里要传参的地方写一个?,代表我这里传参数 参数在我执行这个语句的时候以参数的方式传入
 
+    let connection = dbutil.createConnection();
     connection.connect();
 
     // 我因为要传两个参数,所以要调整一下传进去的形式,
@@ -57,6 +60,7 @@ function queryStudentByClassAndAge(classNum, age){
 function queryStudentByStuNum(stuNum, success) {
     let querySql = "select * from students where stu_num = ?";
 
+    let connection = dbutil.createConnection();
     connection.connect();
 
     connection.query(querySql, stuNum, function(error, result) {
@@ -67,7 +71,6 @@ function queryStudentByStuNum(stuNum, success) {
             console.log(error);
         }
     });
-
     connection.end();
 }
 

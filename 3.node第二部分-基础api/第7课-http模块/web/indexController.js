@@ -53,9 +53,43 @@ function login(request, response) {
     })
 }
 
+// 处理post请求,请求内容和上面的get请求
+function login1(request, response) {
+
+    // post请求的参数没有放在url里面,所以解析url是解析不到参数的
+    // let params = url.parse(request.url, true).query; // 加一个true就把参数们变成对象的形式
+
+    // 接收post请求里面的参数
+    // post请求的数据是在data事件里面捕获的
+    request.on("data", function(data){ // 如果有data,这个data就是参数
+        // 解析一下data
+        let stuNum = data.toString().split("&")[0].split("=")[1];
+        let password = data.toString().split("&")[1].split("=")[1];
+
+        // 把剩下的放到这个函数里面去
+        studentService.queryStudentByStuNum(stuNum, function (result) {
+            let res;
+            if(result == null || result.length === 0){
+                res = "Fail"; // 如果没找到
+            }else{
+                if (result[0].pwd === password){ // 返回的是一个数组,返回第一个
+                    res = "OK"; // 找到了相等
+                }else{
+                    res = "Fail"; // 找到了不相等
+                }
+            }
+            response.write(res);
+            response.end();
+        })
+    });
+
+
+}
+
 
 // 我想让这个处理请求的方法和路径对应起来,因为我请求请求的是路径
 path.set("/getData", getData);
 path.set("/getData2", getData2);
 path.set("/login", login);
+path.set("/login1", login1);
 module.exports.path = path; // 把我的这个字典导出来
