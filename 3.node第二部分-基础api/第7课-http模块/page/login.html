@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+
   <title>Title</title>
-  <script >
+
+  <script>
       function login() {
           let stuNum = document.getElementById("stuNum").value;
           let password = document.getElementById("password").value;
@@ -13,7 +16,6 @@
           let xmlHttp = new XMLHttpRequest();
           xmlHttp.open("GET", "/login?" + params, true);
           xmlHttp.send(null);
-
           // 发get请求
           xmlHttp.onreadystatechange = function () {
               if (xmlHttp.readyState === 4 && xmlHttp.status === 200){
@@ -40,7 +42,6 @@
           xmlHttp.open("POST", "/login1", true);
           xmlHttp.send(params); // 参数不放在url里面,放在send里面
 
-          // 发get请求
           xmlHttp.onreadystatechange = function () {
               if (xmlHttp.readyState === 4 && xmlHttp.status === 200){
                   console.log(xmlHttp.responseText);  // 这里请求成功了打印给我返回的内容(这里因为是由index.http文件调用,所以打印在浏览器上)
@@ -48,19 +49,36 @@
 
                   if(xmlHttp.responseText === "OK") { // 如果返回值是ok
                       alert("成功");
+                      console.log(111);
+                      // 登录成功的话实现跳转
+                      // 第一种方式是在这个页面里面通过ajax请求,用js的方式实现跳转 (很常见)
+                      // 直接用这个语句就可以了,我也不知道为啥
+                      location.href = "./main.html";
                   }else{
                       alert("失败");
                   }
+
               }
           };
       }
 
-      // 发post请求
   </script>
 </head>
 <body>
     <input type="text" id="stuNum" placeholder="学号">
     <input type="password" id="password" placeholder="密码">
     <input type="submit" value="提交" onclick="login1()">
+
+    <br>
+    <br>
+    第二种页面跳转的方式(古老的方式,不常用)
+    form表单的形式,两个参数一个请求方式,第二个请求的url,就是一点提交,它就用post请求发送一个url是/login1的请求
+    但是这种就没有js操作,跳转什么的要在后端写
+    <form method="post" action="/login1">
+        <input type="text" name="stuNum" id="stuNum2" placeholder="学号">
+        <input type="password" name="password" id="password2" placeholder="密码">
+        <input type="submit" value="提交" >
+    </form>
+
 </body>
 </html>

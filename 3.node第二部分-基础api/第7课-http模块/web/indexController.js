@@ -70,16 +70,38 @@ function login1(request, response) {
         studentService.queryStudentByStuNum(stuNum, function (result) {
             let res;
             if(result == null || result.length === 0){
+                // 这里假设我用的是form表单的提交,就得在这个里面写跳转,分开写,这里写失败的跳转
+                // 如果没用form表单就直接返回值就行了,用js依据返回值跳转,就不用下面的跳转语句了
                 res = "Fail"; // 如果没找到
+                // response.writeHead(302, {"location": "./error.html"});
+                // response.end();
             }else{
                 if (result[0].pwd === password){ // 返回的是一个数组,返回第一个
                     res = "OK"; // 找到了相等
+                    //往里面写一个cookie,代表我登录过了
+                    response.writeHead(200, {"Set-Cookie":"id=" + result[0].id});
+
+                    // 这里写form表单成功的跳转与写入cookie
+                    // response.writeHead(302, {"location": "./main.html", "Set-Cookie":"id=" + result[0].id});
+                    // response.end();
                 }else{
                     res = "Fail"; // 找到了不相等
+                    // 这里写form表单失败的跳转
+                    // response.writeHead(302, {"location": "./error.html"});
+                    // response.end();
                 }
             }
+            // 如果不是form表单就用这两句话
             response.write(res);
             response.end();
+
+            // 如果我是用form表单发送的请求,没法在回调里面写js
+            // 所以就要在后端这边写一个请求成功后跳转
+            // 我们叫重定向
+
+            // 写一个响应头,里面有一个字段就让他跳转,这个跳转是浏览器读了这个之后浏览器来做的
+            // response.writeHead(302, {"location": "./main.html"}); // 3开头的表示跳转, {}里面写响应头里面的字段
+            // response.end();
         })
     });
 

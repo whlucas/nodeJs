@@ -14,6 +14,8 @@ let log = require("./log");
 
 let loader = require("./loader");
 
+// 引入拦截器
+let filterSet = require("./filterLoader")
 
 // 我们前端发的请求分为两种,一种是请求固定的东西,一种是请求不固定的东西
 // 固定的东西: 一个html文件,一个图片,一个js文件等等,称为静态资源,如果请求的是这个,我们就给他从配置里面去读,读出来返回,读不出来就404
@@ -28,10 +30,18 @@ http.createServer(function (request, response) { // 里面穿一个函数,这个
     // 获取参数
     // let param = url.parse(request.url, true).query; // 加一个true就把参数们变成对象的形式
     // 判断是静态文件还是动态文件
-    let isStatic = idStaticsRequest(pathName);
+    let isStatic = isStaticsRequest(pathName);
 
     // 写一个日志
     log(pathName);
+
+    // 刚一进来我就拦截,拦截拦不住了我再走后面的
+    for (let i = 0; i < filterSet.length; i++) {
+        let flag = filterSet[i](request, response);
+        if(!flag){ // 如果拦住了就结束了,不往下走了
+            return;
+        }
+    }
 
 
     if(isStatic){ // 请求的是静态的文件
@@ -72,7 +82,7 @@ http.createServer(function (request, response) { // 里面穿一个函数,这个
 }).listen(globalConfig2["port"]);
 
 
-function idStaticsRequest(pathName) {
+function isStaticsRequest(pathName) {
     for (let i = 0 ; i < globalConfig2.static_file_type.length; i++){
         // if(pathName.indexOf(globalConfig.static_file_type[i])){ //我的url里面只要包括了那些类型里面的一个,但是我这个必须要存在于结尾,存在于中间是不好使的所以这样不太对
         //     return true;
