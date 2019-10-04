@@ -51,6 +51,25 @@ http.createServer(function (request, response) { // 里面穿一个函数,这个
             // 返回用的是response这个参数
             // 写相应头
             response.writeHead(200);
+
+            // 这里其实需要按照拓展名来决定content-type的类型，比如.html拓展名就是text/html,访问.jpg就是image/jpeg
+
+            // 可以做一个优化，如果url中不存在拓展名，此时表示这是一个文件夹，此时再后面自动补全/index.html
+            // 这里还有一个坑，如果不是以/结尾，此时会造成浏览器识别文件的路径层次有问题
+            // 比如http://127.0.0.1/b 和http://127.0.0.1/b/不一样，同样的一个文件wangjunkai.jpg前者认为是同级目录下的文件，后者认为是b文件夹中的，所以要识别一下最后一个是不是'/'，如果不是就给他加一个/
+
+            // let extname = path.extname(pathname);
+            // if(!extname){
+            //     if (pathname.substr(-1) != "/"){
+            //         res.writeHead(302, {"Location" : pathname + "/"})
+            //     }
+            //     pathname += "/index.html";
+            // }
+
+            // 还有一个问题是要解决304的问题，就是文件没变或者没有改动就拒绝传输新文件并返回304，一般用框架就完事了
+
+            // formidable用来处理post请求，可以处理图片、zip等文件的上传
+
             //写相应体
             response.write(data);
             // 把他关了
