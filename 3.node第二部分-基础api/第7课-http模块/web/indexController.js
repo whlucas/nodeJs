@@ -2,7 +2,7 @@
 
 // 我现在想要让getData2这个请求,去查询我数据库里面的东西
 // 首先引入service层里面东西,sevice层里面引入DAO层,DAO层访问数据库
-let studentService = require("../service/第5课(3)-studentService")
+let studentService = require("../service/第5课(3)-studentService");
 
 let path = new Map();
 
